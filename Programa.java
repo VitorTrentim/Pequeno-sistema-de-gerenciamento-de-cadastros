@@ -1,7 +1,6 @@
 /*
     Aluno: Vitor Trentim Navarro de Almeida
-    RA: 191021067
-    16/04/2020
+    18/04/2020
 */
 
 import java.awt.*;
