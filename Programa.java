@@ -1,5 +1,6 @@
 /*
     Aluno: Vitor Trentim Navarro de Almeida
+    RA: 191021067
     16/04/2020
 */
 
@@ -539,7 +540,7 @@ public class Programa extends JFrame implements ActionListener {
                     while (rs.next()) {
                         rowCount++;
                     }
-                    rs = stmt.executeQuery("SELECT * FROM " + nomeDaTabela);
+                    rs = stmt.executeQuery("SELECT * FROM " + nomeDaTabela + " ORDER BY NOME");
                     data = new Object[rowCount][5];
                     while (rs.next()) {
                         data[rs.getRow()-1][0] = rs.getString("NOME");
@@ -566,7 +567,7 @@ public class Programa extends JFrame implements ActionListener {
                     while (rs.next()) {
                         rowCount++;
                     }
-                    rs = stmt.executeQuery("SELECT * FROM " + nomeDaTabela);
+                    rs = stmt.executeQuery("SELECT * FROM " + nomeDaTabela + " ORDER BY PRODUTO");
                     data = new Object[rowCount][5];
                     while (rs.next()) {
                         data[rs.getRow()-1][0] = rs.getString("PRODUTO");
@@ -592,7 +593,7 @@ public class Programa extends JFrame implements ActionListener {
                     while (rs.next()) {
                         rowCount++;
                     }
-                    rs = stmt.executeQuery("SELECT * FROM " + nomeDaTabela);
+                    rs = stmt.executeQuery("SELECT * FROM " + nomeDaTabela + " ORDER BY FORNECEDOR");
                     data = new Object[rowCount][4];
                     while (rs.next()) {
                         data[rs.getRow()-1][0] = rs.getString("FORNECEDOR");
@@ -682,8 +683,7 @@ public class Programa extends JFrame implements ActionListener {
             nomeInterno = nomeTabela;
             bInserir.addActionListener(this);
             getRootPane().setDefaultButton(bInserir);
-
-
+            
             addInternalFrameListener(new InternalFrameAdapter(){ //Listener para saber quando as janelas de tabela são fechadas
                 public void	internalFrameClosed(InternalFrameEvent e){
                     objetoChamada.isInserirOpen = false;
@@ -696,7 +696,6 @@ public class Programa extends JFrame implements ActionListener {
                     }
                 }
             });
-
 
             gc.fill = GridBagConstraints.HORIZONTAL;
             gc.anchor = GridBagConstraints.NORTHWEST;
@@ -849,10 +848,8 @@ public class Programa extends JFrame implements ActionListener {
                 catch (Exception ex){
                     System.out.println("Erro!\n"+ex);
                 }
-
             }
         }
-
     }
 
     class Remove extends JInternalFrame implements ActionListener {
@@ -1256,11 +1253,6 @@ public class Programa extends JFrame implements ActionListener {
             }
         }
     }
-
-
-
-
-
 
     public static void main(String[] args) {
         new Programa();
