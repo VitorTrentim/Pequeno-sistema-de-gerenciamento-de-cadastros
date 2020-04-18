@@ -1,3 +1,9 @@
+/*
+    Aluno: Vitor Trentim Navarro de Almeida
+    RA: 191021067
+    16/04/2020
+*/
+
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
@@ -255,7 +261,7 @@ public class Programa extends JFrame implements ActionListener {
                     nomeTabela = entradaNome.getText().toUpperCase();
                     entradaNome.setText(null);
 
-                    if (nomeTabela == null || nomeTabela.isEmpty()){
+                    if (nomeTabela == null || nomeTabela.trim().isEmpty()){
                         JOptionPane.showMessageDialog(janelaPrincipal, "Erro ao criar a tabela.\nNome nao permitido.\n", "Erro", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
@@ -281,8 +287,14 @@ public class Programa extends JFrame implements ActionListener {
                     tipoTabelaNum = -1;
                     revalidate();
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(janelaPrincipal, "Erro ao criar a tabela. Possiveis causas:\nJa existe uma tabela com o mesmo nome.\nCaracteres nao permitidos (espacos, / , < , * e afins)", "Erro", JOptionPane.ERROR_MESSAGE);
-                } catch (NullPointerException ex) {
+                    if (ex.getMessage().startsWith("Unexpected token")){
+                        JOptionPane.showMessageDialog(janelaPrincipal, "Erro ao criar a tabela.\n Causa: Caracteres nao permitidos (espacos, / , < , * e afins)\n", "Erro", JOptionPane.ERROR_MESSAGE);
+                    } else if (ex.getMessage().startsWith("Table already")){
+                        JOptionPane.showMessageDialog(janelaPrincipal, "Erro ao criar a tabela.\n Causa: Tabela ja existente.\n", "Erro", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(janelaPrincipal, "Erro indefinido ao criar a tabela.\n"+ex, "Erro", JOptionPane.ERROR_MESSAGE);
+                    }
+                    } catch (NullPointerException ex) {
                     JOptionPane.showMessageDialog(janelaPrincipal, "Problema interno.\n"+ex, "Erro", JOptionPane.ERROR_MESSAGE);
                 } catch (Exception ex){
                     JOptionPane.showMessageDialog(janelaPrincipal, "Problema indefinido.\n", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -1070,7 +1082,7 @@ public class Programa extends JFrame implements ActionListener {
                         remove(scroll);
                     }
                     rowCount = 0;
-                    if (valorProcurar.getText().isEmpty() || valorProcurar.getText() == null){
+                    if (valorProcurar.getText().trim().isEmpty() || valorProcurar.getText() == null){
                         JOptionPane.showMessageDialog(janelaPrincipal, "Necessario completar o campo de busca.\n", "Erro", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
@@ -1126,23 +1138,23 @@ public class Programa extends JFrame implements ActionListener {
                     } else if (nomeInterno.startsWith("PRO")){  ///////////////////////////////// PRODUTOS
                         switch (comboColunas.getSelectedItem().toString()) {
                             case ("PRODUTO"):
-                                pStmt = conexao.prepareStatement("SELECT * FROM " + nomeInterno + " WHERE PRODUTO LIKE ? ORDER BY NOME");
+                                pStmt = conexao.prepareStatement("SELECT * FROM " + nomeInterno + " WHERE PRODUTO LIKE ? ORDER BY PRODUTO");
                                 pStmt.setString(1, valorProcurar.getText().toUpperCase().concat("%"));
                                 break;
                             case ("ID"):
-                                pStmt = conexao.prepareStatement("SELECT * FROM " + nomeInterno + " WHERE ID=? ORDER BY NOME");
+                                pStmt = conexao.prepareStatement("SELECT * FROM " + nomeInterno + " WHERE ID=? ORDER BY PRODUTO");
                                 pStmt.setLong(1, Long.parseLong(valorProcurar.getText()));
                                 break;
                             case ("PRECO"):
-                                pStmt = conexao.prepareStatement("SELECT * FROM " + nomeInterno + " WHERE PRECO=? ORDER BY NOME");
+                                pStmt = conexao.prepareStatement("SELECT * FROM " + nomeInterno + " WHERE PRECO=? ORDER BY PRODUTO");
                                 pStmt.setFloat(1, Float.parseFloat(valorProcurar.getText()));
                                 break;
                             case ("QUANTIDADE"):
-                                pStmt = conexao.prepareStatement("SELECT * FROM " + nomeInterno + " WHERE QUANTIDADE=? ORDER BY NOME");
+                                pStmt = conexao.prepareStatement("SELECT * FROM " + nomeInterno + " WHERE QUANTIDADE=? ORDER BY PRODUTO");
                                 pStmt.setInt(1, Integer.parseInt(valorProcurar.getText()));
                                 break;
                             case ("DEPARTAMENTO"):
-                                pStmt = conexao.prepareStatement("SELECT * FROM " + nomeInterno + " WHERE DEPARTAMENTO LIKE ? ORDER BY NOME");
+                                pStmt = conexao.prepareStatement("SELECT * FROM " + nomeInterno + " WHERE DEPARTAMENTO LIKE ? ORDER BY PRODUTO");
                                 pStmt.setString(1, valorProcurar.getText().toUpperCase().concat("%"));
                                 break;
                         }
@@ -1173,19 +1185,19 @@ public class Programa extends JFrame implements ActionListener {
                     } else {  ///////////////////////////////// FORNECEDORES
                         switch (comboColunas.getSelectedItem().toString()) {
                             case ("FORNECEDOR"):
-                                pStmt = conexao.prepareStatement("SELECT * FROM " + nomeInterno + " WHERE FORNECEDOR LIKE ? ORDER BY NOME");
+                                pStmt = conexao.prepareStatement("SELECT * FROM " + nomeInterno + " WHERE FORNECEDOR LIKE ? ORDER BY FORNECEDOR");
                                 pStmt.setString(1, valorProcurar.getText().toUpperCase().concat("%"));
                                 break;
                             case ("CNPJ"):
-                                pStmt = conexao.prepareStatement("SELECT * FROM " + nomeInterno + " WHERE CNPJ=? ORDER BY NOME");
+                                pStmt = conexao.prepareStatement("SELECT * FROM " + nomeInterno + " WHERE CNPJ=? ORDER BY FORNECEDOR");
                                 pStmt.setString(1, valorProcurar.getText().toUpperCase());
                                 break;
                             case ("TELEFONE"):
-                                pStmt = conexao.prepareStatement("SELECT * FROM " + nomeInterno + " WHERE TELEFONE=? ORDER BY NOME");
+                                pStmt = conexao.prepareStatement("SELECT * FROM " + nomeInterno + " WHERE TELEFONE=? ORDER BY FORNECEDOR");
                                 pStmt.setLong(1, Long.parseLong(valorProcurar.getText()));
                                 break;
                             case ("ENDERECO"):
-                                pStmt = conexao.prepareStatement("SELECT * FROM " + nomeInterno + " WHERE ENDERECO LIKE ? ORDER BY NOME");
+                                pStmt = conexao.prepareStatement("SELECT * FROM " + nomeInterno + " WHERE ENDERECO LIKE ? ORDER BY FORNECEDOR");
                                 pStmt.setString(1, valorProcurar.getText().toUpperCase().concat("%"));
                                 break;
                         }
